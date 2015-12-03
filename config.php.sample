@@ -1,0 +1,27 @@
+<?php
+$config = [];
+$config['id'] = 'SERVER_ID';
+$config['name'] = 'SERVER_NAME';
+$config['preparse'] = true;
+$config['keys'] = [
+];
+$config['push'] = [];
+$config['push'][] = [
+	'url' => 'https://awesome.site.com/provide',
+	'key' => 'KEY'
+];
+$config['databaseBackupDirectory'] = 'BACKUP_PATH';
+$config['fetchDatabaseNames'] = function() {
+	$mysqli = new mysqli("127.0.0.1", "DB_USERNAME", "DB_PASSWORD");
+	if ($mysqli->connect_errno) {
+	    return false;
+	}
+	$databasesRaw = $mysqli->query("SHOW DATABASES;");
+	$databases = [];
+	foreach ($databasesRaw->fetch_all() as $database) {
+		if (substr($database[0], 0, 1) === '_' || in_array($database[0], ['information_schema', 'mysql'])) { continue; }
+		$databases[] = $database[0];
+	}
+	return $databases;
+};
+$config['databaseConfig'] = [];
