@@ -75,7 +75,7 @@ class Provider
 	protected function getDiskSpaceSensor($drive)
 	{
 		$sensor = [
-			'class' => 'canis\sensors\local\DynamicData',
+			'class' => 'psesd\sensors\local\DynamicData',
 			'id' => 'disk-space-' . $drive,
 			'name' => 'Free Disk Space on ' . $drive,
 			'dataValuePostfix' => '%'
@@ -101,9 +101,9 @@ class Provider
 		$data = ['timestamp' => time(), 'earliestNextCheck' => time(), 'provider' => null];
 		$data['earliestNextCheck'] = time() + 60;
 		if ($isPush) {
-			$providerClass = 'canis\sensors\providers\PushProvider';
+			$providerClass = 'psesd\sensors\providers\PushProvider';
 		} else { 
-			$providerClass = 'canis\sensors\providers\PullProvider';
+			$providerClass = 'psesd\sensors\providers\PullProvider';
 		}
 		$data['provider'] = [
 			'class' => $providerClass,
@@ -114,7 +114,7 @@ class Provider
 		];
 
 		$data['provider']['servers']['self'] = [
-			'class' => 'canis\sensors\servers\WindowsServer',
+			'class' => 'psesd\sensors\servers\WindowsServer',
 			'id' => $this->config['id'],
 			'name' => $this->config['name'],
 			'meta' => [],
@@ -125,7 +125,7 @@ class Provider
 		$data['provider']['servers']['self']['meta']['PHP Version'] = phpversion();
 
 		$data['provider']['servers']['self']['services']['db'] = [
-			'class' => 'canis\sensors\services\DatabaseService'
+			'class' => 'psesd\sensors\services\DatabaseService'
 		];
 
 		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'serverInfo.json';
@@ -135,7 +135,7 @@ class Provider
 			if (isset($info['ips'])) {
 				foreach ($info['ips'] as $ip) {
 					$data['provider']['servers']['self']['resources'][] = [
-						'class' => 'canis\sensors\resources\IP',
+						'class' => 'psesd\sensors\resources\IP',
 						'ip' => $ip
 					];
 				}
@@ -166,7 +166,7 @@ class Provider
 					$sensors = [];
 					if (isset($database['lastBackup'])) {
 						$sensor = [
-							'class' => 'canis\sensors\local\Dynamic',
+							'class' => 'psesd\sensors\local\Dynamic',
 							'id' => 'database-has-backup',
 							'name' => 'Database Backup'
 						];
@@ -184,7 +184,7 @@ class Provider
 						$sensors['database-has-backup'] = $sensor;
 					}
 					$databaseConfig = array_merge([
-						'class' => 'canis\sensors\resources\\' . $type,
+						'class' => 'psesd\sensors\resources\\' . $type,
 						'dbName' => $database['name'],
 						'sensors' => $sensors
 					], $base);
